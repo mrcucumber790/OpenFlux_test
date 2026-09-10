@@ -1,0 +1,72 @@
+name: Build OpenFlux iOS App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show environment
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.3'
+
+      - name: Build OpenFlux iOS library
+        run: |
+          chmod +x build_ios.sh
+          ./build_ios.sh
+
+      - name: Install XcodeGen
+        run: |
+          brew install xcodegen
+
+      - name: Generate Xcode project
+        run: |
+          xcodegen generate
+
+      - name: Build app
+        run: |
+          xcodebuild \
+            -project OpenFluxiOS.xcodeproj \
+            -scheme OpenFluxiOS \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Find app
+        run: |
+          find . -name "*.app" -type d
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+
+          APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData \
+            -path "*/Build/Products/Release-iphoneos/OpenFluxiOS.app" \
+            -type d | head -n 1)
+
+          if [ -z "$APP_PATH" ]; then
+            echo "OpenFluxiOS.app not found"
+            exit 1
+          fi
+
+          cp -R "$APP_PATH" Payload/OpenFluxiOS.app
+          zip -r OpenFlux.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenFlux-unsigned
+          path: OpenFlux.ipa
