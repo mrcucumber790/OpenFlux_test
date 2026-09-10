@@ -1,0 +1,33 @@
+name: OpenFluxiOS
+
+options:
+  deploymentTarget:
+    iOS: "13.0"
+
+targets:
+  OpenFluxiOS:
+    type: application
+    platform: iOS
+
+    sources:
+      - path: OpenFluxiOS
+
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.openflux.client
+      INFOPLIST_FILE: OpenFluxiOS/Info.plist
+      SWIFT_VERSION: 6.0
+
+      HEADER_SEARCH_PATHS:
+        - "$(SRCROOT)/output/ios"
+
+      LIBRARY_SEARCH_PATHS:
+        - "$(SRCROOT)/output/ios"
+
+      OTHER_LDFLAGS:
+        - "-lof​lux"
+        - "-framework"
+        - "Foundation"
+        - "-framework"
+        - "Network"
+
+    dependencies: []
