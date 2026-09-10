@@ -1,0 +1,39 @@
+name: Build OpenFlux iOS library
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.3'
+
+      - name: Build iOS library
+        run: |
+          chmod +x build_ios.sh
+          ./build_ios.sh
+
+      - name: Show output
+        run: |
+          ls -lah output/ios/
+
+      - name: Upload library
+        uses: actions/upload-artifact@v4
+        with:
+          name: openflux-ios-library
+          path: |
+            output/ios/liboflux.a
+            output/ios/liboflux.h
