@@ -2,7 +2,7 @@ name: OpenFluxiOS
 
 options:
   deploymentTarget:
-    iOS: "13.0"
+    iOS: "15.0"
 
 targets:
   OpenFluxiOS:
@@ -15,7 +15,7 @@ targets:
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.openflux.client
       INFOPLIST_FILE: OpenFluxiOS/Info.plist
-      SWIFT_VERSION: 6.0
+      SWIFT_VERSION: "5.0"
 
       HEADER_SEARCH_PATHS:
         - "$(SRCROOT)/output/ios"
@@ -24,10 +24,11 @@ targets:
         - "$(SRCROOT)/output/ios"
 
       OTHER_LDFLAGS:
-        - "-lof​lux"
+        - "-loflux"
         - "-framework"
         - "Foundation"
         - "-framework"
         - "Network"
 
-    dependencies: []
+      CODE_SIGNING_ALLOWED: "NO"
+      CODE_SIGNING_REQUIRED: "NO"
