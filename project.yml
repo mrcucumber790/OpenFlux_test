@@ -12,10 +12,12 @@ targets:
     sources:
       - path: OpenFluxiOS
 
-    settings:
+        settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.openflux.client
       INFOPLIST_FILE: OpenFluxiOS/Info.plist
       SWIFT_VERSION: "5.0"
+
+      SWIFT_OBJC_BRIDGING_HEADER: "$(SRCROOT)/OpenFluxiOS/OpenFluxBridge.h"
 
       HEADER_SEARCH_PATHS:
         - "$(SRCROOT)/output/ios"
